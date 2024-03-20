@@ -110,3 +110,32 @@ func FalsePosition(c *gin.Context) {
 	}
 	handlers.Response(c, true, res, nil, http.StatusOK)
 }
+
+func Newton(c *gin.Context) {
+	var b struct {
+		X0    string  `json:"x0"`
+		Tol   float64 `json:"tol"`
+		Fx    string  `json:"fx"`
+		Niter int     `json:"niter"`
+	}
+	c.Bind(&b)
+
+	x0, err := utils.EvalParameter(b.X0)
+	if err != nil {
+		handlers.Response(c, false, nil, err, http.StatusInternalServerError)
+		return
+	}
+
+	root, table, err := nonlinear.Newton(x0, b.Tol, b.Fx, b.Niter)
+
+	if err != nil {
+		handlers.Response(c, false, nil, err, http.StatusInternalServerError)
+		return
+	}
+
+	res := map[string]interface{}{"root": root}
+	if table != nil {
+		res["table"] = table
+	}
+	handlers.Response(c, true, res, nil, http.StatusOK)
+}

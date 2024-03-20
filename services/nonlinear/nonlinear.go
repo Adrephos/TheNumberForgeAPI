@@ -6,6 +6,7 @@ import (
 	"math"
 
 	"github.com/Pramod-Devireddy/go-exprtk"
+	clc "github.com/TheDemx27/calculus"
 )
 
 func newExpression(exp string) (exprtk.GoExprtk, error) {
@@ -111,7 +112,6 @@ func FixedPoint(x0, tol float64, fx, gx string, niter int) (float64, map[string]
 	if fn[c] == 0 {
 		return x, nil, nil
 	} else if E[len(E)-1] < tol {
-		//fmt.Print(x, " es una aproximación de una raiz de ", fx, " con una toleracia ", tol, "\n\n")
 		table := map[string]interface{}{
 			"n":     c,
 			"xn":    xn,
@@ -146,18 +146,18 @@ func FalsePosition(a, b, tol float64, fx string, niter int) (float64, map[string
 	}
 
 	for n < niter {
-		xm = append(xm ,bn[n] - fb*(bn[n]-an[n])/(fb-fa))
+		xm = append(xm, bn[n]-fb*(bn[n]-an[n])/(fb-fa))
 		fm = append(fm, xm[n])
 		if fm[n] == 0 {
 			return xm[n], nil, nil
 		}
 		E = append(E, math.Abs(xm[n]-bn[n]))
 		if E[n] <= tol {
-			table := map[string] interface{} {
-				"n": n,
-				"a": an,
-				"xm": xm,
-				"b": bn,
+			table := map[string]interface{}{
+				"n":     n,
+				"a":     an,
+				"xm":    xm,
+				"b":     bn,
 				"f(xm)": fm,
 				"error": E,
 			}
@@ -174,4 +174,48 @@ func FalsePosition(a, b, tol float64, fx string, niter int) (float64, map[string
 		fb = fm[n-1]
 	}
 	return 0, nil, errors.New(fmt.Sprint("failed after ", niter, " iterations\n"))
+}
+
+func Newton(x0, tol float64, fx string, niter int) (float64, map[string]interface{}, error) {
+	var xn, fn, E []float64
+
+	fxExp, err := newExpression(fx)
+	if err != nil {
+		return 0, nil, err
+	}
+	f := func(x float64) float64 {
+		return evaluateExp(&fxExp, x)
+	}
+	fdx := func(x float64) float64 {
+		return clc.Diff(f, x)
+	}
+
+	n := 0
+	xn = append(xn, x0)
+	fn = append(fn, f(xn[n]))
+	E = append(E, 100)
+
+	if fn[n] == 0 {
+		return x0, nil, nil
+	}
+
+	for n < niter {
+		x := xn[n] - f(xn[n])/fdx(xn[n])
+		e := math.Abs(x - xn[n])
+		E = append(E, e)
+		xn = append(xn, x)
+		fn = append(fn, f(x))
+		n++
+		if e < tol {
+			table := map[string]interface{}{
+				"n":     n,
+				"xn":    xn,
+				"fn":    fn,
+				"error": E,
+			}
+			return x, table, nil
+		}
+	}
+
+	return 0, nil, errors.New(fmt.Sprint("method failed in ", niter, " iterations"))
 }
