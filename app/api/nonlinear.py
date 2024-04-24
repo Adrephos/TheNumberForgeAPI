@@ -6,24 +6,60 @@ import models.response as response
 router = APIRouter()
 
 
-def columns_to_str(columns):
-    return [[str(y) for y in x] for x in columns]
-
-
 @router.post("/bisection")
 def bisection(input_data: NonlinearModels.Bisection):
     try:
         result, table, error = NonlinearService.Bisection(
-            input_data.a, input_data.b, input_data.tol,
-            input_data.fx, input_data.niter
+            input_data.a, input_data.b, input_data.fx,
+            input_data.tol, input_data.niter, input_data.relativeError
         )
         if error:
             return response.ResponseModel(None, False, error)
 
         data = {
-            "result": result,
+            "root": result,
+            "columns": table["columns"],
             "rows": table["rows"],
-            "columns": columns_to_str(table["columns"]),
+        }
+        return response.ResponseModel(data, True, None)
+    except Exception as e:
+        return response.ResponseModel(None, False, str(e))
+
+
+@router.post("/fixed_point")
+def fixed_point(input_data: NonlinearModels.FixedPoint):
+    try:
+        result, table, error = NonlinearService.Fixed_point(
+            input_data.x0, input_data.fx, input_data.gx,
+            input_data.tol, input_data.niter, input_data.relativeError
+        )
+        if error:
+            return response.ResponseModel(None, False, error)
+
+        data = {
+            "root": result,
+            "columns": table["columns"],
+            "rows": table["rows"],
+        }
+        return response.ResponseModel(data, True, None)
+    except Exception as e:
+        return response.ResponseModel(None, False, str(e))
+
+
+@router.post("/false_position")
+def false_position(input_data: NonlinearModels.FalsePosition):
+    try:
+        result, table, error = NonlinearService.False_position(
+            input_data.a, input_data.b, input_data.fx,
+            input_data.tol, input_data.niter, input_data.relativeError
+        )
+        if error:
+            return response.ResponseModel(None, False, error)
+
+        data = {
+            "root": result,
+            "columns": table["columns"],
+            "rows": table["rows"],
         }
         return response.ResponseModel(data, True, None)
     except Exception as e:

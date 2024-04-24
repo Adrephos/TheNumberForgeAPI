@@ -2,39 +2,44 @@ from pydantic import BaseModel
 
 
 class Bisection(BaseModel):
-    a: float
-    b: float
+    a: str
+    b: str
     tol: float
     fx: str
     niter: int
+    relativeError: bool
 
 
 class FixedPoint(BaseModel):
-    x0: float
-    tol: float
+    x0: str
     fx: str
     gx: str
+    tol: float
     niter: int
+    relativeError: bool
 
 
 class FalsePosition(BaseModel):
-    a: float
-    b: float
+    a: str
+    b: str
     tol: float
     fx: str
     niter: int
+    relativeError: bool
 
 
 class Newton(BaseModel):
-    x0: float
+    x0: str
     tol: float
     fx: str
     niter: int
+    relativeError: bool
 
 
 class Secant(BaseModel):
-    x0: float
-    x1: float
+    x0: str
+    x1: str
     tol: float
     fx: str
     niter: int
+    relativeError: bool
