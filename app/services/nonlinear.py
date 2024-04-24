@@ -165,3 +165,45 @@ def False_position(
         "rows": [[i, an[i], xm[i], bn[i], fm[i], E[i]] for i in range(n+1)],
     }
     return xm[n], table, None
+
+
+def Newton(
+        x0: str,
+        fx: str,
+        tol: float,
+        niter: int,
+        relativeError: bool) -> (float, dict, str):
+
+    try:
+        x0 = parse_param(x0)
+        fxExp = parse_func(fx)
+        fdExp = sy.diff(fxExp, sy.symbols("x"))
+    except Exception:
+        return 0, None, "Invalid function or interval"
+
+    n = 0
+    xn, fn, E = [x0], [evaluate(fxExp, x0)], [100]
+
+    if fn[n] == 0:
+        return xn[n], None, None
+
+    while E[n] > tol and n < niter:
+        fdx = evaluate(fdExp, xn[n])
+        if fdx == 0:
+            err = "Derivative is zero"
+            return 0, None, err
+        x = xn[n] - evaluate(fxExp, xn[n])/fdx
+        xn.append(x)
+        fn.append(evaluate(fxExp, x))
+        E.append(error(x, xn[n], relativeError))
+        n += 1
+
+    if n == niter or not (E[n] < tol):
+        err = f'Method failed in {niter} iterations'
+        return 0, None, err
+
+    table = {
+        "columns": ["n", "x", "f(x)", "error"],
+        "rows": [[i, xn[i], fn[i], E[i]] for i in range(n+1)],
+    }
+    return xn[n], table, None

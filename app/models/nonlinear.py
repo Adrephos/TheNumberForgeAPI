@@ -30,8 +30,8 @@ class FalsePosition(BaseModel):
 
 class Newton(BaseModel):
     x0: str
-    tol: float
     fx: str
+    tol: float
     niter: int
     relativeError: bool
 
@@ -39,7 +39,7 @@ class Newton(BaseModel):
 class Secant(BaseModel):
     x0: str
     x1: str
-    tol: float
     fx: str
+    tol: float
     niter: int
     relativeError: bool

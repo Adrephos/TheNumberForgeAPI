@@ -64,3 +64,23 @@ def false_position(input_data: NonlinearModels.FalsePosition):
         return response.ResponseModel(data, True, None)
     except Exception as e:
         return response.ResponseModel(None, False, str(e))
+
+
+@router.post("/newton")
+def newton(input_data: NonlinearModels.Newton):
+    try:
+        result, table, error = NonlinearService.Newton(
+            input_data.x0, input_data.fx, input_data.tol,
+            input_data.niter, input_data.relativeError
+        )
+        if error:
+            return response.ResponseModel(None, False, error)
+
+        data = {
+            "root": result,
+            "columns": table["columns"],
+            "rows": table["rows"],
+        }
+        return response.ResponseModel(data, True, None)
+    except Exception as e:
+        return response.ResponseModel(None, False, str(e))
