@@ -84,3 +84,23 @@ def newton(input_data: NonlinearModels.Newton):
         return response.ResponseModel(data, True, None)
     except Exception as e:
         return response.ResponseModel(None, False, str(e))
+
+
+@router.post("/secant")
+def secant(input_data: NonlinearModels.Secant):
+    try:
+        result, table, error = NonlinearService.Secant(
+            input_data.x0, input_data.x1, input_data.fx,
+            input_data.tol, input_data.niter, input_data.relativeError
+        )
+        if error:
+            return response.ResponseModel(None, False, error)
+
+        data = {
+            "root": result,
+            "columns": table["columns"],
+            "rows": table["rows"],
+        }
+        return response.ResponseModel(data, True, None)
+    except Exception as e:
+        return response.ResponseModel(None, False, str(e))

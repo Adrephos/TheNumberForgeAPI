@@ -173,7 +173,6 @@ def Newton(
         tol: float,
         niter: int,
         relativeError: bool) -> (float, dict, str):
-
     try:
         x0 = parse_param(x0)
         fxExp = parse_func(fx)
@@ -205,5 +204,54 @@ def Newton(
     table = {
         "columns": ["n", "x", "f(x)", "error"],
         "rows": [[i, xn[i], fn[i], E[i]] for i in range(n+1)],
+    }
+    return xn[n], table, None
+
+
+def Secant(
+        x0: str,
+        x1: str,
+        fx: str,
+        tol: float,
+        niter: int,
+        relativeError: bool) -> (float, dict, str):
+
+    try:
+        x0, x1 = parse_param(x0), parse_param(x1)
+        fxExp = parse_func(fx)
+    except Exception:
+        return 0, None, "Invalid function or interval"
+
+    n = 1
+    E = [100, 100]
+    fx0, fx1 = evaluate(fxExp, x0), evaluate(fxExp, x1)
+    xn, fx = [x0, x1], [fx0, fx1]
+
+    if fx0 == 0:
+        return x0, None, None
+    elif fx1 == 0:
+        return x1, None, None
+
+    while n < niter:
+        xn.append(x1 - fx1*(x1-x0)/(fx1-fx0))
+        fx.append(evaluate(fxExp, xn[n]))
+        if fx[n] == 0:
+            return xn[n], None, None
+        n += 1
+        E.append(error(xn[n], xn[n-1], relativeError))
+        if E[n] < tol:
+            break
+        x0, x1 = x1, xn[n]
+        fx0, fx1 = evaluate(fxExp, x0), evaluate(fxExp, x1)
+        if fx1 == fx0:
+            return 0, None, "Division by zero"
+
+    if n == niter or not (E[n] < tol):
+        err = f'Method failed in {niter} iterations'
+        return 0, None, err
+
+    table = {
+        "columns": ["n", "x", "f(x)", "error"],
+        "rows": [[i, xn[i], fx[i], E[i]] for i in range(n+1)],
     }
     return xn[n], table, None

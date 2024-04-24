@@ -22,8 +22,8 @@ class FixedPoint(BaseModel):
 class FalsePosition(BaseModel):
     a: str
     b: str
-    tol: float
     fx: str
+    tol: float
     niter: int
     relativeError: bool
 
