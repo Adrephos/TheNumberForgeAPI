@@ -16,11 +16,14 @@ def bisection(input_data: NonlinearModels.Bisection):
         if error:
             return response.ResponseModel(None, False, error)
 
-        data = {
-            "root": result,
-            "columns": table["columns"],
-            "rows": table["rows"],
-        }
+        data = {"root": result}
+
+        if table is None:
+            return response.ResponseModel(data, True, None)
+
+        data["columns"] = table["columns"]
+        data["rows"] = table["rows"]
+
         return response.ResponseModel(data, True, None)
     except Exception as e:
         return response.ResponseModel(None, False, str(e))
@@ -36,11 +39,14 @@ def fixed_point(input_data: NonlinearModels.FixedPoint):
         if error:
             return response.ResponseModel(None, False, error)
 
-        data = {
-            "root": result,
-            "columns": table["columns"],
-            "rows": table["rows"],
-        }
+        data = {"root": result}
+
+        if table is None:
+            return response.ResponseModel(data, True, None)
+
+        data["columns"] = table["columns"]
+        data["rows"] = table["rows"]
+
         return response.ResponseModel(data, True, None)
     except Exception as e:
         return response.ResponseModel(None, False, str(e))
@@ -56,11 +62,14 @@ def false_position(input_data: NonlinearModels.FalsePosition):
         if error:
             return response.ResponseModel(None, False, error)
 
-        data = {
-            "root": result,
-            "columns": table["columns"],
-            "rows": table["rows"],
-        }
+        data = {"root": result}
+
+        if table is None:
+            return response.ResponseModel(data, True, None)
+
+        data["columns"] = table["columns"]
+        data["rows"] = table["rows"]
+
         return response.ResponseModel(data, True, None)
     except Exception as e:
         return response.ResponseModel(None, False, str(e))
@@ -76,11 +85,14 @@ def newton(input_data: NonlinearModels.Newton):
         if error:
             return response.ResponseModel(None, False, error)
 
-        data = {
-            "root": result,
-            "columns": table["columns"],
-            "rows": table["rows"],
-        }
+        data = {"root": result}
+
+        if table is None:
+            return response.ResponseModel(data, True, None)
+
+        data["columns"] = table["columns"]
+        data["rows"] = table["rows"]
+
         return response.ResponseModel(data, True, None)
     except Exception as e:
         return response.ResponseModel(None, False, str(e))
@@ -96,11 +108,14 @@ def secant(input_data: NonlinearModels.Secant):
         if error:
             return response.ResponseModel(None, False, error)
 
-        data = {
-            "root": result,
-            "columns": table["columns"],
-            "rows": table["rows"],
-        }
+        data = {"root": result}
+
+        if table is None:
+            return response.ResponseModel(data, True, None)
+
+        data["columns"] = table["columns"]
+        data["rows"] = table["rows"]
+
         return response.ResponseModel(data, True, None)
     except Exception as e:
         return response.ResponseModel(None, False, str(e))
