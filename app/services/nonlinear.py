@@ -1,4 +1,8 @@
 import sympy as sy
+import sympy.parsing.sympy_parser as spp
+
+transforms = spp.standard_transformations + \
+    (spp.implicit_multiplication_application,)
 
 
 # Evaluate the expression at a given point
@@ -8,12 +12,14 @@ def evaluate(expr, x):
 
 # Parse a numeric parameter
 def parse_param(expr):
-    return float(sy.parse_expr(expr.replace("^", "**")).evalf())
+    expr = expr.replace("^", "**")
+    return float(spp.parse_expr(expr, transformations=transforms).evalf())
 
 
 # Parse a function expression
 def parse_func(expr):
-    return sy.parse_expr(expr.replace("^", "**"))
+    expr = expr.replace("^", "**")
+    return spp.parse_expr(expr, transformations=transforms, evaluate=False)
 
 
 # Calculate the error
