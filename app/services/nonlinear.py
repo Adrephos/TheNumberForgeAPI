@@ -178,11 +178,13 @@ def Newton(
         fx: str,
         tol: float,
         niter: int,
+        multiple_roots: bool,
         relativeError: bool) -> (float, dict, str):
     try:
         x0 = parse_param(x0)
         fxExp = parse_func(fx)
         fdExp = sy.diff(fxExp, sy.symbols("x"))
+        fddExp = sy.diff(fdExp, sy.symbols("x"))
     except Exception:
         return 0, None, "Invalid function or interval"
 
@@ -193,11 +195,25 @@ def Newton(
         return xn[n], None, None
 
     while E[n] > tol and n < niter:
+        # Evaluate the function and its derivatives
         fdx = evaluate(fdExp, xn[n])
-        if fdx == 0:
+        if multiple_roots:
+            fddx = evaluate(fddExp, xn[n])
+        fx = evaluate(fxExp, xn[n])
+
+        if fdx == 0 and not multiple_roots:
             err = "Derivative is zero"
             return 0, None, err
-        x = xn[n] - evaluate(fxExp, xn[n])/fdx
+        elif multiple_roots and (fdx**2 - fx*fddx) == 0:
+            err = "Division by zero"
+            return 0, None, err
+
+        # Newton or Modified Newton
+        if multiple_roots:
+            x = xn[n] - (fx*fdx)/(fdx**2 - fx*fddx)
+        else:
+            x = xn[n] - evaluate(fxExp, xn[n])/fdx
+
         xn.append(x)
         fn.append(evaluate(fxExp, x))
         E.append(error(x, xn[n], relativeError))
