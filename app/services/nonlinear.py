@@ -39,6 +39,8 @@ def Bisection(
     try:
         a, b = parse_param(a), parse_param(b)
         fxExp = parse_func(fx)
+        if b < a:
+            return 0, None, "a must be less than b"
     except Exception:
         return 0, None, "Invalid function or interval"
 
@@ -131,6 +133,8 @@ def False_position(
     try:
         a, b = parse_param(a), parse_param(b)
         fxExp = parse_func(fx)
+        if b < a:
+            return 0, None, "a must be less than b"
     except Exception:
         return 0, None, "Invalid function or interval"
 
