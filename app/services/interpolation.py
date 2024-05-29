@@ -111,7 +111,7 @@ def L_k(x: list, k: int) -> (str, str):
         elif i != k:
             top += f'(x - {x[i]})'
 
-    return f'({top})/({bot})', f'\\\\frac{{{top}}}{{{bot}}}'
+    return f'({top})/({bot})', f'\\frac{{{top}}}{{{bot}}}'
 
 
 def Lagrange(x: list, y: list) -> (str, str, str):
@@ -241,32 +241,3 @@ def CubicSpline(x: list, y: list) -> (list, list, str):
         tracer = f'{val[i][0]}x^3 {signs[1]} {abs(val[i][1])}x^2 {signs[2]} {abs(val[i][2])}x {signs[3]} {abs(val[i][3])}'
         tracers.append([[x[i], y[i]], tracer])
     return val, tracers, None
-
-
-x = [44, 66, 82, 88]
-y = [50, 20, 10, 30]
-
-matrix, tracers, err = LinearSpline(x, y)
-for i in range(len(tracers)):
-    print(tracers[i])
-
-print()
-
-matrix, tracers, err = CubicSpline(x, y)
-for i in range(len(tracers)):
-    print(tracers[i])
-
-print()
-
-table, polynomial, err = Newton(x, y)
-print(polynomial)
-
-print()
-
-v_matrix, y, polynomial, err = Vandermonde(x, y)
-print(polynomial)
-
-print()
-
-polynomial, texPolynomial, err = Lagrange(x, y)
-print(polynomial)
