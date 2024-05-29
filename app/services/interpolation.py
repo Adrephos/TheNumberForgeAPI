@@ -22,8 +22,6 @@ def order_together(x, y):
 def Vandermonde(x: list, y: list) -> (list, list, str, str):
     if has_duplicates(x):
         return None, None, None, "The list has repeated elements"
-    if has_duplicates(y):
-        return None, None, None, "The list has repeated elements"
 
     degree = len(x)
 
@@ -55,8 +53,6 @@ def Vandermonde(x: list, y: list) -> (list, list, str, str):
 
 def Newton(x, y) -> (dict, str, str):
     if has_duplicates(x):
-        return None, None, None, "The list has repeated elements"
-    if has_duplicates(y):
         return None, None, None, "The list has repeated elements"
     degree = len(x)
     x = sy.Matrix(x)
@@ -125,8 +121,6 @@ def L_k(x: list, k: int) -> (str, str):
 def Lagrange(x: list, y: list) -> (str, str, str):
     if has_duplicates(x):
         return None, None, "The list has repeated elements"
-    if has_duplicates(y):
-        return None, None, "The list has repeated elements"
     degree = len(x)
     polynomial = ''
     texPolynomial = ''
@@ -143,8 +137,6 @@ def Lagrange(x: list, y: list) -> (str, str, str):
 
 def LinearSpline(x: list, y: list) -> (list, list, str):
     if has_duplicates(x):
-        return None, None, "The list has repeated elements"
-    if has_duplicates(y):
         return None, None, "The list has repeated elements"
     x, y = order_together(x, y)
     n = len(x)
@@ -183,8 +175,6 @@ def LinearSpline(x: list, y: list) -> (list, list, str):
 
 def CubicSpline(x: list, y: list) -> (list, list, str):
     if has_duplicates(x):
-        return None, None, "The list has repeated elements"
-    if has_duplicates(y):
         return None, None, "The list has repeated elements"
     x, y = order_together(x, y)
     n = len(x)
