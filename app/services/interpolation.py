@@ -10,6 +10,14 @@ def has_duplicates(list):
     return len(list) != len(set(list))
 
 
+def order_together(x, y):
+    combined = list(zip(x, y))
+    combined.sort()
+    ordered_x, ordered_y = zip(*combined)
+
+    return ordered_x, ordered_y
+
+
 # Matriz de vandermonde, vector b, polinomio, error
 def Vandermonde(x: list, y: list) -> (list, list, str, str):
     if has_duplicates(x):
@@ -138,6 +146,7 @@ def LinearSpline(x: list, y: list) -> (list, list, str):
         return None, None, "The list has repeated elements"
     if has_duplicates(y):
         return None, None, "The list has repeated elements"
+    x, y = order_together(x, y)
     n = len(x)
     A = sy.zeros((2*(n-1)))
     b = sy.Matrix([0 for _ in range(2*(n-1))])
@@ -167,7 +176,8 @@ def LinearSpline(x: list, y: list) -> (list, list, str):
     for i in range(n-1):
         sign = '+' if val[i][1] >= 0 else '-'
         tracer = f'{val[i][0]}x {sign} {abs(val[i][1])}'
-        tracers.append([[x[i], y[i]], tracer])
+        # range and tracer
+        tracers.append([[x[i], x[i+1]], tracer])
     return val, tracers, None
 
 
@@ -176,6 +186,7 @@ def CubicSpline(x: list, y: list) -> (list, list, str):
         return None, None, "The list has repeated elements"
     if has_duplicates(y):
         return None, None, "The list has repeated elements"
+    x, y = order_together(x, y)
     n = len(x)
     A = sy.zeros((4*(n-1)))
     b = sy.Matrix([0 for _ in range(4*(n-1))])
@@ -239,5 +250,5 @@ def CubicSpline(x: list, y: list) -> (list, list, str):
     for i in range(n-1):
         signs = ['+' if val[i][j] >= 0 else '-' for j in range(4)]
         tracer = f'{val[i][0]}x^3 {signs[1]} {abs(val[i][1])}x^2 {signs[2]} {abs(val[i][2])}x {signs[3]} {abs(val[i][3])}'
-        tracers.append([[x[i], y[i]], tracer])
+        tracers.append([[x[i], x[i+1]], tracer])
     return val, tracers, None
